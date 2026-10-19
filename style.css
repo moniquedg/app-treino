@@ -1,0 +1,28 @@
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: #0D0B14;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.nav-item.active {
+  color: #A855F7;
+}
+
+.week-tab.active, .cargas-tab.active {
+  background-color: rgba(88, 28, 135, 0.6);
+  border-color: #A855F7;
+  color: #ffffff;
+}
+
+.btn-time-select.active {
+  background-color: rgba(88, 28, 135, 0.6);
+  border-color: #A855F7;
+  color: #ffffff;
+}
