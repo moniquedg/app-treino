@@ -1,4 +1,4 @@
-const APP_STATE_KEY = "app_treino_state_v3";
+const APP_STATE_KEY = "app_treino_state_v4";
 
 const initialWorkoutData = {
   seg: {
@@ -70,13 +70,37 @@ const initialWorkoutData = {
       { name: "Rosca Direta com Halteres", sets: "3 séries • 12 reps", type: "Isolado — Bíceps", alts: ["Rosca 21", "Rosca concentrada"] },
       { name: "Face Pull & Mobilidade", sets: "4 séries • 15 reps", type: "Ombros e Postura", alts: ["Band pull-apart", "Rotação externa"] }
     ]
+  },
+  sab: {
+    heroTitle: "CARDIO • Atividade Aeróbica",
+    heroSub: "Resistência & Regeneração • 2 exercícios",
+    focusTitle: "Foco: Condicionamento Físico",
+    focusDesc: "Sessão focada em gasto calórico e recuperação ativa.",
+    cardioTitle: "45 min Corrida / Caminhada",
+    cardioSub: "Ritmo moderado contínuo",
+    exercises: [
+      { name: "Corrida Contínua / Caminhada Inclinada", sets: "1 sessão • 45 min", type: "Aeróbico", alts: ["Bicicleta ergométrica", "Elíptico"] },
+      { name: "Mobilidade e Mobilização Articular", sets: "3 séries • 10 min", type: "Flexibilidade", alts: ["Alongamento dinâmico", "Liberação miofascial"] }
+    ]
+  },
+  dom: {
+    heroTitle: "REST • Descanso Ativo",
+    heroSub: "Recuperação Total",
+    focusTitle: "Foco: Regeneração Muscular",
+    focusDesc: "Dia de descanso para recuperação muscular e do SNC.",
+    cardioTitle: "20 min Caminhada Leve",
+    cardioSub: "Opcional • Ritmo relaxado",
+    exercises: [
+      { name: "Caminhada Leve ao Ar Livre", sets: "1 sessão • 20-30 min", type: "Recuperação Ativa", alts: ["Passeio de bicicleta", "Sem atividade"] },
+      { name: "Rotina de Alongamentos", sets: "1 sessão • 15 min", type: "Flexibilidade", alts: ["Yoga suave", "Mobilidade de quadril"] }
+    ]
   }
 };
 
 function getState() {
   const saved = localStorage.getItem(APP_STATE_KEY);
   if (!saved) {
-    return { completed: {}, weights: {}, activeExercises: {}, customWorkouts: initialWorkoutData };
+    return { completed: {}, weights: {}, activeExercises: {}, workoutHistory: [], customWorkouts: initialWorkoutData };
   }
   return JSON.parse(saved);
 }
@@ -99,9 +123,11 @@ document.addEventListener("DOMContentLoaded", () => {
   setupCSVImporter();
   renderWorkoutSheet(selectedDay);
   renderCargasView(selectedCargaDay);
+  renderHistoryLog();
 });
 
 function setupEvents() {
+  // Navegação
   document.querySelector("nav")?.addEventListener("click", (e) => {
     const btn = e.target.closest(".nav-item");
     if (!btn) return;
@@ -118,6 +144,7 @@ function setupEvents() {
     document.getElementById(targetId)?.classList.remove("hidden");
   });
 
+  // Troca de Dia da Semana
   document.getElementById("week-tabs")?.addEventListener("click", (e) => {
     const btn = e.target.closest(".week-tab");
     if (!btn) return;
@@ -133,6 +160,7 @@ function setupEvents() {
     renderWorkoutSheet(selectedDay);
   });
 
+  // Filtro na Aba Cargas
   document.getElementById("cargas-day-filter")?.addEventListener("click", (e) => {
     const btn = e.target.closest(".cargas-tab");
     if (!btn) return;
@@ -148,6 +176,7 @@ function setupEvents() {
     renderCargasView(selectedCargaDay);
   });
 
+  // Cliques na lista de exercícios
   document.getElementById("exercise-list")?.addEventListener("click", (e) => {
     const chk = e.target.closest(".chk-box");
     if (chk) {
@@ -184,10 +213,39 @@ function setupEvents() {
     }
   });
 
+  // Concluir Treino de Hoje (Salvar Histórico e Resetar Checkboxes do Dia)
+  document.getElementById("btn-finish-workout")?.addEventListener("click", () => {
+    const state = getState();
+    const data = state.customWorkouts[selectedDay] || initialWorkoutData[selectedDay];
+    
+    const now = new Date();
+    const dateStr = now.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
+    const timeStr = now.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+
+    updateState(st => {
+      if (!st.workoutHistory) st.workoutHistory = [];
+      st.workoutHistory.unshift({
+        dayKey: selectedDay,
+        dayName: getDayName(selectedDay),
+        title: data.heroTitle,
+        date: dateStr,
+        time: timeStr
+      });
+
+      // Resetar checkboxes apenas do dia concluído
+      data.exercises.forEach((_, idx) => {
+        delete st.completed[`${selectedDay}-${idx}`];
+      });
+    });
+
+    renderWorkoutSheet(selectedDay);
+    renderHistoryLog();
+    alert(`Treino de ${getDayName(selectedDay)} registrado com sucesso! Parabéns! 🎉`);
+  });
+
   setupTimerControls();
 }
 
-// IMPORTADOR DE PLANILHA CSV
 function setupCSVImporter() {
   const input = document.getElementById("csv-file-input");
   if (!input) return;
@@ -299,7 +357,7 @@ function renderWorkoutSheet(day) {
   container.innerHTML = htmlList;
 
   const total = data.exercises.length;
-  const pct = Math.round((completedCount / total) * 100);
+  const pct = total > 0 ? Math.round((completedCount / total) * 100) : 0;
   document.getElementById("workout-progress-fill").style.width = `${pct}%`;
   document.getElementById("workout-progress-text").innerText = `${completedCount}/${total} concluídos`;
   document.getElementById("sheet-count").innerText = `${completedCount}/${total}`;
@@ -340,6 +398,32 @@ function renderCargasView(day) {
       </div>
     `;
   }).join("");
+}
+
+function renderHistoryLog() {
+  const container = document.getElementById("history-log-list");
+  if (!container) return;
+
+  const state = getState();
+  const history = state.workoutHistory || [];
+
+  if (history.length === 0) {
+    container.innerHTML = `<p class="text-gray-500 italic">Nenhum treino concluído recentemente.</p>`;
+    return;
+  }
+
+  container.innerHTML = history.map(item => `
+    <div class="bg-[#161322] border border-[#272238] rounded-xl p-3 flex justify-between items-center">
+      <div>
+        <span class="text-[10px] font-bold text-purple-400 uppercase">${item.dayName}</span>
+        <h5 class="text-xs font-bold text-gray-200">${item.title}</h5>
+      </div>
+      <div class="text-right text-[10px] text-gray-400">
+        <div>${item.date}</div>
+        <div class="text-gray-500">${item.time}</div>
+      </div>
+    </div>
+  `).join("");
 }
 
 function setupTimerControls() {
@@ -413,6 +497,14 @@ function setupTimerControls() {
 }
 
 function getDayName(key) {
-  const map = { seg: "Segunda-feira", ter: "Terça-feira", qua: "Quarta-feira", qui: "Quinta-feira", sex: "Sexta-feira" };
+  const map = {
+    seg: "Segunda-feira",
+    ter: "Terça-feira",
+    qua: "Quarta-feira",
+    qui: "Quinta-feira",
+    sex: "Sexta-feira",
+    sab: "Sábado",
+    dom: "Domingo"
+  };
   return map[key] || "Segunda-feira";
 }

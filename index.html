@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Treino em Foco</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Biblioteca para leitura de CSV no navegador -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,10 +24,9 @@
         <span class="font-bold text-base tracking-tight text-white">Treino em Foco</span>
       </div>
       
-      <!-- BOTÃO DE IMPORTAR PLANILHA -->
       <label class="cursor-pointer border border-[#272238] hover:border-purple-500/50 bg-[#161322] px-3 py-1.5 rounded-lg text-[11px] font-semibold text-purple-300 flex items-center gap-1.5 active:scale-95 transition">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-        <span>Planilha</span>
+        <span>Planilha CSV</span>
         <input type="file" id="csv-file-input" accept=".csv" class="hidden">
       </label>
     </header>
@@ -36,47 +34,49 @@
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="px-4 pt-4 flex-1">
       
-      <!-- ABAS: TREINOS -->
+      <!-- ABA 1: TREINOS -->
       <section id="view-treinos" class="space-y-4">
         <div class="flex justify-between items-center">
           <h1 class="text-2xl font-extrabold tracking-tight">Treinos da Semana</h1>
         </div>
 
-        <!-- CARD HOJE -->
+        <!-- CARD RESUMO DO DIA -->
         <div class="bg-gradient-to-br from-[#1C152E] to-[#161322] border border-[#272238] rounded-2xl p-5">
           <div class="flex justify-between items-start">
             <div>
-              <span id="hero-tag" class="text-[10px] font-bold text-purple-400 tracking-wider uppercase">HOJE • SEGUNDA-FEIRA</span>
-              <h2 id="hero-title" class="text-lg font-extrabold mt-1">UPPER • Superiores</h2>
-              <p id="hero-sub" class="text-xs text-gray-400 mt-0.5">Base & Força • 5 exercícios</p>
+              <span id="hero-tag" class="text-[10px] font-bold text-purple-400 tracking-wider uppercase">HOJE</span>
+              <h2 id="hero-title" class="text-lg font-extrabold mt-1">Carregando...</h2>
+              <p id="hero-sub" class="text-xs text-gray-400 mt-0.5">-</p>
             </div>
-            <span class="bg-purple-600/20 border border-purple-500/40 text-purple-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Dia Atual</span>
+            <span class="bg-purple-600/20 border border-purple-500/40 text-purple-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Dia Selecionado</span>
           </div>
         </div>
 
-        <!-- SELETOR DE DIAS -->
+        <!-- SELETOR DE DIAS (7 DIAS) -->
         <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-none" id="week-tabs">
           <button class="week-tab active bg-purple-950/60 border border-purple-500 text-white px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5" data-day="seg">Seg <span class="opacity-50 text-[10px]">UPPER</span></button>
           <button class="week-tab bg-[#161322] border border-[#272238] text-gray-400 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5" data-day="ter">Ter <span class="opacity-50 text-[10px]">LOWER</span></button>
           <button class="week-tab bg-[#161322] border border-[#272238] text-gray-400 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5" data-day="qua">Qua <span class="opacity-50 text-[10px]">PUSH</span></button>
           <button class="week-tab bg-[#161322] border border-[#272238] text-gray-400 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5" data-day="qui">Qui <span class="opacity-50 text-[10px]">RUN</span></button>
           <button class="week-tab bg-[#161322] border border-[#272238] text-gray-400 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5" data-day="sex">Sex <span class="opacity-50 text-[10px]">PULL</span></button>
+          <button class="week-tab bg-[#161322] border border-[#272238] text-gray-400 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5" data-day="sab">Sáb <span class="opacity-50 text-[10px]">CARDIO</span></button>
+          <button class="week-tab bg-[#161322] border border-[#272238] text-gray-400 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5" data-day="dom">Dom <span class="opacity-50 text-[10px]">REST</span></button>
         </div>
 
-        <!-- CARD FOCO -->
+        <!-- CARD FOCO E PROGRESSO -->
         <div class="bg-[#161322] border border-[#272238] rounded-2xl p-4 space-y-3">
           <div class="flex justify-between items-center">
-            <span id="focus-pill" class="bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-semibold px-3 py-1 rounded-full">Foco: Superiores & postura</span>
-            <span id="focus-count" class="text-[11px] text-gray-500">5 exercícios</span>
+            <span id="focus-pill" class="bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-semibold px-3 py-1 rounded-full">Foco</span>
+            <span id="focus-count" class="text-[11px] text-gray-500">0 exercícios</span>
           </div>
-          <p id="focus-desc" class="text-xs text-gray-300 leading-relaxed">Trabalho composto para costas, peitoral e ombros.</p>
+          <p id="focus-desc" class="text-xs text-gray-300 leading-relaxed"></p>
           <div class="space-y-1.5 pt-1">
             <div class="h-1.5 bg-[#272238] rounded-full overflow-hidden">
               <div id="workout-progress-fill" class="h-full bg-purple-500 w-0 transition-all duration-300"></div>
             </div>
             <div class="flex justify-between text-[11px] text-gray-500">
               <span>Progresso da sessão</span>
-              <span id="workout-progress-text">0/5 concluídos</span>
+              <span id="workout-progress-text">0/0 concluídos</span>
             </div>
           </div>
         </div>
@@ -88,46 +88,63 @@
           </div>
           <div>
             <span class="text-[9px] uppercase tracking-wider font-bold text-purple-400">Cardio Recomendado</span>
-            <h4 id="cardio-title" class="text-xs font-bold mt-0.5 text-gray-200">25-30 min Transport / Elíptico</h4>
-            <p id="cardio-sub" class="text-[11px] text-gray-400">Pós-treino • frequência cardíaca controlada</p>
+            <h4 id="cardio-title" class="text-xs font-bold mt-0.5 text-gray-200"></h4>
+            <p id="cardio-sub" class="text-[11px] text-gray-400"></p>
           </div>
         </div>
 
-        <!-- LISTA DE EXERCÍCIOS -->
+        <!-- FICHA DE EXERCÍCIOS -->
         <div class="pt-2">
           <div class="flex justify-between items-center mb-3">
             <h3 id="sheet-title" class="text-sm font-bold">Ficha de Exercícios</h3>
-            <span id="sheet-count" class="text-xs text-purple-400 font-bold">0/5</span>
+            <span id="sheet-count" class="text-xs text-purple-400 font-bold">0/0</span>
           </div>
           <div id="exercise-list" class="space-y-3">
-            <!-- Injetado dinamicamente -->
+            <!-- Injetado via script.js -->
           </div>
+        </div>
+
+        <!-- BOTAO CONCLUIR TREINO -->
+        <div class="pt-3 pb-6">
+          <button id="btn-finish-workout" class="w-full bg-emerald-600/20 border border-emerald-500/40 hover:bg-emerald-600/30 text-emerald-300 font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 active:scale-[0.98] transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span>Concluir Treino de Hoje</span>
+          </button>
         </div>
       </section>
 
-      <!-- ABAS: CARGAS E HISTÓRICO -->
+      <!-- ABA 2: CARGAS E HISTÓRICO -->
       <section id="view-cargas" class="hidden space-y-4">
         <div>
           <span class="text-[10px] uppercase tracking-wider font-bold text-purple-400">Evolução & Registros</span>
           <h1 class="text-2xl font-extrabold tracking-tight">Histórico de Cargas</h1>
-          <p class="text-xs text-gray-400 mt-1">Acompanhe as cargas salvas organizadas por dia.</p>
+          <p class="text-xs text-gray-400 mt-1">Acompanhe as cargas salvas organizadas por dia da semana.</p>
         </div>
 
-        <!-- SELETOR DE DIA PARA VER CARGAS -->
         <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-none" id="cargas-day-filter">
           <button class="cargas-tab active bg-purple-950/60 border border-purple-500 text-white px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap" data-cargaday="seg">Segunda</button>
           <button class="cargas-tab bg-[#161322] border border-[#272238] text-gray-400 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap" data-cargaday="ter">Terça</button>
           <button class="cargas-tab bg-[#161322] border border-[#272238] text-gray-400 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap" data-cargaday="qua">Quarta</button>
           <button class="cargas-tab bg-[#161322] border border-[#272238] text-gray-400 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap" data-cargaday="qui">Quinta</button>
           <button class="cargas-tab bg-[#161322] border border-[#272238] text-gray-400 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap" data-cargaday="sex">Sexta</button>
+          <button class="cargas-tab bg-[#161322] border border-[#272238] text-gray-400 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap" data-cargaday="sab">Sábado</button>
+          <button class="cargas-tab bg-[#161322] border border-[#272238] text-gray-400 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap" data-cargaday="dom">Domingo</button>
         </div>
 
         <div class="space-y-3 pt-1" id="cargas-list">
-          <!-- Injetado dinamicamente -->
+          <!-- Injetado via script.js -->
+        </div>
+
+        <!-- REGISTRO DE CONCLUSÕES DE TREINOS -->
+        <div class="pt-4 border-t border-[#272238]">
+          <h3 class="text-sm font-bold text-gray-200 mb-3">Treinos Concluídos</h3>
+          <div id="history-log-list" class="space-y-2 text-xs">
+            <!-- Injetado via script.js -->
+          </div>
         </div>
       </section>
 
-      <!-- ABAS: TIMER -->
+      <!-- ABA 3: TIMER DE DESCANSO -->
       <section id="view-timer" class="hidden space-y-4">
         <div>
           <span class="text-[10px] uppercase tracking-wider font-bold text-purple-400">Recuperação entre séries</span>
@@ -165,7 +182,7 @@
 
     </main>
 
-    <!-- NAVEGAÇÃO INFERIOR FIXA -->
+    <!-- MENU INFERIOR FIXO -->
     <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-[#0D0B14]/95 backdrop-blur-md border-t border-[#272238] flex justify-around py-2.5 z-50">
       <button class="nav-item active flex flex-col items-center gap-1 text-purple-400" data-target="view-treinos">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
