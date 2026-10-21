@@ -1,11 +1,12 @@
-const APP_STATE_KEY = "app_treino_state_v5";
+// CHAVE FIXA E PERMANENTE DE PERSISTÊNCIA NO LOCALSTORAGE
+const APP_STATE_KEY = "APP_TREINO_PERMANENTE_V1";
 
 const initialWorkoutData = {
   seg: {
     heroTitle: "UPPER • Superiores",
     heroSub: "Base & Força • 5 exercícios",
     focusTitle: "Foco: Superiores & postura",
-    focusDesc: "Trabalho composto para costas, peitoral e ombros.",
+    focusDesc: "Trabalho composto para costas, peitoral e ombros. Mantenha a postura firme e controle cada repetição.",
     cardioTitle: "25-30 min Transport / Elíptico",
     cardioSub: "Pós-treino • frequência cardíaca controlada",
     exercises: [
@@ -20,7 +21,7 @@ const initialWorkoutData = {
     heroTitle: "LOWER • Membros Inferiores",
     heroSub: "Tonificação, Coxas & Panturrilhas • 7 exercícios",
     focusTitle: "Foco: Quadríceps, Parte Interna & Panturrilhas",
-    focusDesc: "Trabalho completo de firmeza de coxa e fortalecimento de tornozelos/panturrilhas.",
+    focusDesc: "Trabalho completo de firmeza de coxa, adutores e fortalecimento de tornozelos/panturrilhas.",
     cardioTitle: "20 min Caminhada Leve / Regenerativa",
     cardioSub: "Pós-treino • frequência cardíaca controlada",
     exercises: [
@@ -109,14 +110,19 @@ const initialWorkoutData = {
   }
 };
 
+// RECUPERA O ESTADO DO LOCALSTORAGE
 function getState() {
   const saved = localStorage.getItem(APP_STATE_KEY);
   if (!saved) {
     return { completed: {}, weights: {}, activeExercises: {}, workoutHistory: [], customWorkouts: initialWorkoutData };
   }
-  return JSON.parse(saved);
+  const parsed = JSON.parse(saved);
+  if (!parsed.customWorkouts) parsed.customWorkouts = initialWorkoutData;
+  if (!parsed.weights) parsed.weights = {};
+  return parsed;
 }
 
+// ATUALIZA O ESTADO NO LOCALSTORAGE
 function updateState(updater) {
   const state = getState();
   updater(state);
@@ -139,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function setupEvents() {
-  // Navegação Principal
+  // Navegação do Menu Inferior
   document.querySelector("nav")?.addEventListener("click", (e) => {
     const btn = e.target.closest(".nav-item");
     if (!btn) return;
@@ -188,7 +194,7 @@ function setupEvents() {
     renderCargasView(selectedCargaDay);
   });
 
-  // Cliques na lista de exercícios
+  // Eventos na lista de exercícios
   document.getElementById("exercise-list")?.addEventListener("click", (e) => {
     const chk = e.target.closest(".chk-box");
     if (chk) {
@@ -225,7 +231,7 @@ function setupEvents() {
     }
   });
 
-  // Concluir Treino de Hoje (Salvar Histórico e Resetar Checkboxes do Dia)
+  // Concluir Treino de Hoje (Salva Histórico e Reseta Checkboxes do Dia)
   document.getElementById("btn-finish-workout")?.addEventListener("click", () => {
     const state = getState();
     const data = state.customWorkouts[selectedDay] || initialWorkoutData[selectedDay];
@@ -324,7 +330,9 @@ function renderWorkoutSheet(day) {
     if (isChecked) completedCount++;
 
     const activeName = (state.activeExercises[day] && state.activeExercises[day][idx]) ? state.activeExercises[day][idx] : ex.name;
-    const currentWeight = state.weights[`${day}-${idx}`] || "";
+    
+    // Busca a carga vinculada primeiramente pelo NOME do exercício, e depois pelo índice
+    const currentWeight = state.weights[`name-${activeName}`] || state.weights[`${day}-${idx}`] || "";
 
     return `
       <div class="bg-[#161322] border border-[#272238] rounded-2xl p-4 space-y-3">
@@ -374,15 +382,27 @@ function renderWorkoutSheet(day) {
   document.getElementById("sheet-count").innerText = `${completedCount}/${total}`;
 }
 
+// SALVA A CARGA VINCULANDO AO NOME DO EXERCÍCIO + ATIVA O TIMER
 function saveInlineWeight(day, idx) {
   const input = document.getElementById(`inline-weight-${day}-${idx}`);
   if (!input) return;
 
-  updateState(state => {
-    state.weights[`${day}-${idx}`] = input.value;
+  const state = getState();
+  const data = state.customWorkouts[day] || initialWorkoutData[day];
+  const ex = data.exercises[idx];
+  const activeName = (state.activeExercises[day] && state.activeExercises[day][idx]) 
+                     ? state.activeExercises[day][idx] 
+                     : ex.name;
+
+  updateState(st => {
+    st.weights[`${day}-${idx}`] = input.value;
+    st.weights[`name-${activeName}`] = input.value;
   });
 
   renderCargasView(selectedCargaDay);
+  
+  // Inicia o timer de descanso automaticamente ao salvar a carga
+  startTimerAuto(90);
 }
 
 function renderCargasView(day) {
@@ -394,7 +414,7 @@ function renderCargasView(day) {
 
   container.innerHTML = data.exercises.map((ex, idx) => {
     const activeName = (state.activeExercises[day] && state.activeExercises[day][idx]) ? state.activeExercises[day][idx] : ex.name;
-    const savedWeight = state.weights[`${day}-${idx}`] || "";
+    const savedWeight = state.weights[`name-${activeName}`] || state.weights[`${day}-${idx}`] || "";
 
     return `
       <div class="bg-[#161322] border border-[#272238] rounded-2xl p-4 flex justify-between items-center">
@@ -441,7 +461,6 @@ function setupTimerControls() {
   const display = document.getElementById("timer-clock-display");
   const startBtn = document.getElementById("btn-timer-start");
   const resetBtn = document.getElementById("btn-timer-reset");
-  const ringFill = document.getElementById("timer-ring-fill");
 
   document.querySelectorAll(".btn-time-select").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -462,48 +481,78 @@ function setupTimerControls() {
   });
 
   resetBtn?.addEventListener("click", resetTimer);
+}
 
-  function startTimer() {
-    isTimerRunning = true;
-    startBtn.innerText = "Pausar";
-    timerInterval = setInterval(() => {
-      if (currentTimerSeconds > 0) {
-        currentTimerSeconds--;
-        updateDisplay();
-      } else {
-        clearInterval(timerInterval);
-        isTimerRunning = false;
-        startBtn.innerText = "Iniciar";
-        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-        alert("Hora de voltar ao treino!");
-      }
-    }, 1000);
-  }
+function startTimerAuto(seconds = 90) {
+  totalTimerSeconds = seconds;
+  currentTimerSeconds = seconds;
+  clearInterval(timerInterval);
+  isTimerRunning = true;
+  
+  const startBtn = document.getElementById("btn-timer-start");
+  if (startBtn) startBtn.innerText = "Pausar";
 
-  function pauseTimer() {
-    clearInterval(timerInterval);
-    isTimerRunning = false;
-    startBtn.innerText = "Iniciar";
-  }
-
-  function resetTimer() {
-    clearInterval(timerInterval);
-    isTimerRunning = false;
-    currentTimerSeconds = totalTimerSeconds;
-    startBtn.innerText = "Iniciar";
-    updateDisplay();
-  }
-
-  function updateDisplay() {
-    const m = String(Math.floor(currentTimerSeconds / 60)).padStart(2, '0');
-    const s = String(currentTimerSeconds % 60).padStart(2, '0');
-    if (display) display.innerText = `${m}:${s}`;
-
-    if (ringFill) {
-      const circumference = 326;
-      const offset = circumference - (currentTimerSeconds / totalTimerSeconds) * circumference;
-      ringFill.style.strokeDashoffset = offset;
+  timerInterval = setInterval(() => {
+    if (currentTimerSeconds > 0) {
+      currentTimerSeconds--;
+      updateDisplay();
+    } else {
+      clearInterval(timerInterval);
+      isTimerRunning = false;
+      if (startBtn) startBtn.innerText = "Iniciar";
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      alert("⏱️ Descanso finalizado! Vamos para a próxima série!");
     }
+  }, 1000);
+}
+
+function startTimer() {
+  isTimerRunning = true;
+  const startBtn = document.getElementById("btn-timer-start");
+  if (startBtn) startBtn.innerText = "Pausar";
+
+  timerInterval = setInterval(() => {
+    if (currentTimerSeconds > 0) {
+      currentTimerSeconds--;
+      updateDisplay();
+    } else {
+      clearInterval(timerInterval);
+      isTimerRunning = false;
+      if (startBtn) startBtn.innerText = "Iniciar";
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      alert("⏱️ Descanso finalizado! Vamos para a próxima série!");
+    }
+  }, 1000);
+}
+
+function pauseTimer() {
+  clearInterval(timerInterval);
+  isTimerRunning = false;
+  const startBtn = document.getElementById("btn-timer-start");
+  if (startBtn) startBtn.innerText = "Iniciar";
+}
+
+function resetTimer() {
+  clearInterval(timerInterval);
+  isTimerRunning = false;
+  currentTimerSeconds = totalTimerSeconds;
+  const startBtn = document.getElementById("btn-timer-start");
+  if (startBtn) startBtn.innerText = "Iniciar";
+  updateDisplay();
+}
+
+function updateDisplay() {
+  const display = document.getElementById("timer-clock-display");
+  const ringFill = document.getElementById("timer-ring-fill");
+  const m = String(Math.floor(currentTimerSeconds / 60)).padStart(2, '0');
+  const s = String(currentTimerSeconds % 60).padStart(2, '0');
+  
+  if (display) display.innerText = `${m}:${s}`;
+
+  if (ringFill) {
+    const circumference = 326;
+    const offset = circumference - (currentTimerSeconds / totalTimerSeconds) * circumference;
+    ringFill.style.strokeDashoffset = offset;
   }
 }
 
