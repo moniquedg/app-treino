@@ -1,4 +1,4 @@
-const APP_STATE_KEY = "app_treino_state_v4";
+const APP_STATE_KEY = "app_treino_state_v5";
 
 const initialWorkoutData = {
   seg: {
@@ -9,90 +9,102 @@ const initialWorkoutData = {
     cardioTitle: "25-30 min Transport / Elíptico",
     cardioSub: "Pós-treino • frequência cardíaca controlada",
     exercises: [
-      { name: "Puxada Aberta no Pulley", sets: "3 séries • 10 - 12", type: "Composto — Costas/Dorsal", alts: ["Puxada neutra no pulley", "Barra fixa assistida"] },
-      { name: "Supino Reto com Halteres", sets: "3 séries • 10 - 12", type: "Composto — Peitoral e ombro", alts: ["Flexão de braço", "Supino na máquina"] },
-      { name: "Remada Baixa no Triângulo", sets: "3 séries • 10 - 12", type: "Composto — Meio das costas", alts: ["Remada articulada", "Remada curvada"] },
-      { name: "Desenvolvimento Sentado com Halteres", sets: "3 séries • 10 - 12", type: "Composto — Deltoide Anterior e Lateral", alts: ["Desenvolvimento na máquina", "Elevação frontal"] },
-      { name: "Tríceps Corda + Rosca Direta (Bi-set)", sets: "3 séries • 12 cada", type: "Isolados — Bi-set para braços", alts: ["Tríceps testa", "Rosca martelo"] }
+      { name: "Puxada Aberta no Pulley", sets: "3 séries • 10 - 12", type: "Composto — Costas/Dorsal", alts: ["Puxada Articulada Neutra", "Puxada Neutra no Pulley"] },
+      { name: "Supino Reto com Halteres", sets: "3 séries • 10 - 12", type: "Composto — Peitoral e ombro", alts: ["Supino na Máquina Articulada", "Supino Inclinado Leve com Halter"] },
+      { name: "Remada Baixa no Triângulo", sets: "3 séries • 10 - 12", type: "Composto — Meio das costas", alts: ["Remada Cavalinho com Apoio no Peito", "Remada Curvada com Halteres"] },
+      { name: "Desenvolvimento Sentado com Halteres", sets: "3 séries • 10 - 12", type: "Composto — Deltoide Anterior e Lateral", alts: ["Desenvolvimento na Máquina", "Desenvolvimento Arnold"] },
+      { name: "Tríceps Corda + Rosca Direta (Bi-set)", sets: "3 séries • 12 cada", type: "Isolados — Bi-set para braços", alts: ["Tríceps Pulley Barra V + Rosca Martelo", "Tríceps Teste + Rosca W"] }
     ]
   },
   ter: {
     heroTitle: "LOWER • Membros Inferiores",
-    heroSub: "Tonificação & Base • 4 exercícios",
-    focusTitle: "Foco: Quadríceps e Glúteos",
-    focusDesc: "Exercícios com controle e amplitude para fortalecimento de joelhos.",
-    cardioTitle: "30 min Esteira (Método 10/4.8)",
-    cardioSub: "Inclinada 10% • Velocidade 4.8 km/h",
+    heroSub: "Tonificação, Coxas & Panturrilhas • 7 exercícios",
+    focusTitle: "Foco: Quadríceps, Parte Interna & Panturrilhas",
+    focusDesc: "Trabalho completo de firmeza de coxa e fortalecimento de tornozelos/panturrilhas.",
+    cardioTitle: "20 min Caminhada Leve / Regenerativa",
+    cardioSub: "Pós-treino • frequência cardíaca controlada",
     exercises: [
-      { name: "Leg Press 45° / Agachamento Livre", sets: "4 séries • 10 reps", type: "Composto — Quadríceps e Glúteos", alts: ["Agachamento Hack", "Agachamento Sumô"] },
-      { name: "Cadeira Extensora", sets: "3 séries • 12 reps", type: "Isolado — Quadríceps", alts: ["Passada com halteres", "Afundo no Smith"] },
-      { name: "Mesa Flexora", sets: "3 séries • 12 reps", type: "Isolado — Isquiostibiais", alts: ["Cadeira flexora", "Stiff leve"] },
-      { name: "Fortalecimento de Tornozelo & Panturrilha", sets: "4 séries • 15 reps", type: "Estabilidade", alts: ["Gêmeos em pé", "Gêmeos sentado"] }
+      { name: "Agachamento no Hack ou Búlgaro", sets: "3 séries • 8 - 10", type: "Composto — Quadríceps e Glúteos", alts: ["Leg Press Horizontal (Pés Médios)", "Agachamento Taça (Goblet Squat)"] },
+      { name: "Leg Press 45°", sets: "3 séries • 10 - 12", type: "Composto — Pés altos para aliviar a patela", alts: ["Leg Press Horizontal (Pés Altos)", "Agachamento Hack Murcho"] },
+      { name: "Agachamento Sumô com Halter", sets: "3 séries • 12 - 15", type: "Firmeza da Parte Interna da Coxa (Adutores)", alts: ["Cadeira Adutora", "Passada Lateral com Miniband"] },
+      { name: "Elevação Pélvica", sets: "3 séries • 10 - 12", type: "Composto — Pausa de 2s no topo", alts: ["Elevação Pélvica na Máquina", "Glúteo Bridge no Banco"] },
+      { name: "Cadeira Extensora", sets: "3 séries • 12 - 15", type: "Isolado — Firmeza Frontal (Vasto Medial)", alts: ["Extensão Unilateral no Cabo", "Passada Estática sem Carga"] },
+      { name: "Cadeira Abdutora", sets: "3 séries • 15 - 20", type: "Isolado — Glúteo Médio & Joelho", alts: ["Abdução de Quadril no Cabo", "Clamshell com Miniband"] },
+      { name: "Gêmeos Sentado (Cadeira de Panturrilha)", sets: "4 séries • 12 - 15", type: "Isolado — Sóleo & Estabilidade de Tornozelo", alts: ["Panturrilha com anilha na coxa", "Gêmeos sentado no Smith"] }
     ]
   },
   qua: {
     heroTitle: "PUSH • Peito, Ombros e Tríceps",
-    heroSub: "Empurrar & Definir • 4 exercícios",
-    focusTitle: "Foco: Ombros e Definição",
+    heroSub: "Empurrar & Ombro Completo 3D • 5 exercícios",
+    focusTitle: "Foco: Ombros e Definição 3D",
     focusDesc: "Trabalho de deltoides em todos os ângulos para definir os braços.",
-    cardioTitle: "25-30 min Transport / Elíptico",
+    cardioTitle: "25-30 min Bicicleta Ergométrica",
     cardioSub: "Ritmo constante",
     exercises: [
-      { name: "Elevação Lateral com Halteres", sets: "4 séries • 12 - 15", type: "Isolado — Deltoide Lateral", alts: ["Elevação lateral na polia", "Elevação na máquina"] },
-      { name: "Face Pull na Polia", sets: "4 séries • 15 reps", type: "Postura — Deltoide Posterior", alts: ["Crucifixo invertido", "Band pull-apart"] },
-      { name: "Desenvolvimento de Ombros", sets: "3 séries • 10 - 12", type: "Composto — Deltoides", alts: ["Desenvolvimento Arnold", "Desenvolvimento Smith"] },
-      { name: "Tríceps Pulley com Barra V", sets: "3 séries • 12 reps", type: "Isolado — Tríceps", alts: ["Tríceps francês", "Tríceps coice"] }
+      { name: "Desenvolvimento Sentado com Halteres", sets: "3 séries • 10 - 12", type: "Composto — Deltoide Anterior e Lateral", alts: ["Desenvolvimento na Máquina", "Desenvolvimento Neutro no Pulley"] },
+      { name: "Elevação Lateral com Halteres", sets: "4 séries • 12 - 15", type: "Isolado — Deltoide Lateral", alts: ["Elevação Lateral no Cabo / Polia Baixa", "Elevação Lateral na Máquina"] },
+      { name: "Elevação Frontal Neutra", sets: "3 séries • 12 reps", type: "Isolado — Deltoide Anterior", alts: ["Elevação Frontal na Polia com Corda", "Elevação Frontal com Anilha"] },
+      { name: "Tríceps Corda no Pulley", sets: "3 séries • 12 - 15", type: "Isolado — Tríceps", alts: ["Tríceps Coice no Cabo", "Tríceps Testa na Polia"] },
+      { name: "Tríceps Teste com Halteres", sets: "3 séries • 10 - 12", type: "Isolado — Tríceps", alts: ["Tríceps Francês Sentado", "Tríceps Mergulho no Banco"] }
     ]
   },
   qui: {
-    heroTitle: "RUN • Cardio & Estabilidade",
-    heroSub: "Resistência & Core • 3 exercícios",
-    focusTitle: "Foco: Corrida e Joelhos",
-    focusDesc: "Exercícios de fortalecimento para prevenir lesões durante corridas.",
-    cardioTitle: "30 min Esteira Inclinada",
-    cardioSub: "Velocidade moderada constante",
+    heroTitle: "RUN • Corrida & Core",
+    heroSub: "Resistência & Estabilidade • 4 exercícios",
+    focusTitle: "Foco: Corrida, Core & Estabilidade de Joelho",
+    focusDesc: "Sessão de corrida intervalada combinada com fortalecimento tático de core e postura.",
+    cardioTitle: "30 min Corrida Intervalada (10x 1m/2m)",
+    cardioSub: "5m aquecimento + 10x (1m trote / 2m caminhada) + 5m desaquecimento",
     exercises: [
-      { name: "Stiff com Halteres", sets: "4 séries • 10 reps", type: "Cadeia Posterior & Glúteos", alts: ["Levantamento Terra", "Good morning"] },
-      { name: "Elevação Pélvica", sets: "4 séries • 12 reps", type: "Isolado — Glúteos", alts: ["Ponte de glúteos", "Kip thrust"] },
-      { name: "Estabilidade de Joelho & Core", sets: "3 séries • 15 reps", type: "Prevenção de lesão", alts: ["Prancha abdominal", "Bird-dog"] }
+      { name: "Prancha Abdominal Isométrica", sets: "3 séries • 45 - 60s", type: "Core & Estabilização Lumbar", alts: ["Prancha com apoio de joelhos", "Abdominal Infra no Solo"] },
+      { name: "Elevação Pélvica com Pausa de 2s", sets: "3 séries • 12 - 15", type: "Ativação de Glúteo & Proteção Patelar", alts: ["Elevação pélvica unilateral", "Glúteo Bridge no Solo"] },
+      { name: "Face Pull no Cabo ou Band", sets: "3 séries • 15 reps", type: "Postura & Deltoide Posterior", alts: ["Band pull-apart", "Crucifixo invertido leve"] },
+      { name: "Abdução de Quadril (Cabo ou Miniband)", sets: "3 séries • 15 reps/perna", type: "Estabilização do Joelho (Glúteo Médio)", alts: ["Clamshell deitado", "Abdução lateral deitada"] }
     ]
   },
   sex: {
-    heroTitle: "PULL • Costas e Bíceps",
-    heroSub: "Postura & Braços • 4 exercícios",
-    focusTitle: "Foco: Perda de Gordura nas Costas",
-    focusDesc: "Ativação intensa das dorsais para postura alinhada.",
-    cardioTitle: "30 min Caminhada",
-    cardioSub: "Foco na queima calórica",
+    heroTitle: "PULL • Costas, Bíceps, Core & Panturrilha",
+    heroSub: "Puxar, Face Pull & Postural • 7 exercícios",
+    focusTitle: "Foco: Postura, Costas & Panturrilha em Pé",
+    focusDesc: "Ativação das dorsais, deltoide posterior, estabilização do core e gastrocnêmio.",
+    cardioTitle: "25-30 min Transport / Elíptico",
+    cardioSub: "Pós-treino de ritmo moderado",
     exercises: [
-      { name: "Remada Curvada com Halteres", sets: "4 séries • 10 - 12", type: "Composto — Dorsal", alts: ["Remada serrote", "Remada cavaquinho"] },
-      { name: "Pulldown Frontal na Polia", sets: "3 séries • 12 reps", type: "Isolado — Latíssimo do dorso", alts: ["Puxada alta", "Puxada articulada"] },
-      { name: "Rosca Direta com Halteres", sets: "3 séries • 12 reps", type: "Isolado — Bíceps", alts: ["Rosca 21", "Rosca concentrada"] },
-      { name: "Face Pull & Mobilidade", sets: "4 séries • 15 reps", type: "Ombros e Postura", alts: ["Band pull-apart", "Rotação externa"] }
+      { name: "Puxada Frente com Pegada Neutra", sets: "3 séries • 10 - 12", type: "Composto — Grande Dorsal", alts: ["Puxada Alta com Triângulo", "Puxada Articulada"] },
+      { name: "Remada Curvada com Halteres", sets: "3 séries • 10 - 12", type: "Composto — Espessura de costas", alts: ["Remada Baixa Pegada Aberta", "Remada Serrote Unilateral"] },
+      { name: "Face Pull no Cabo com Corda", sets: "4 séries • 12 - 15", type: "Composto/Postural — Deltoide Posterior", alts: ["Crucifixo Invertido com Halteres", "Crucifixo Invertido no Peck Deck"] },
+      { name: "Rosca Direta com Halteres", sets: "3 séries • 10 - 12", type: "Isolado — Bíceps", alts: ["Rosca no Cabo com Barra Reta", "Rosca Scott na Máquina"] },
+      { name: "Rosca Martelo com Halteres", sets: "3 séries • 12 reps", type: "Isolado — Bíceps e Antebraço", alts: ["Rosca Martelo no Cabo com Corda", "Rosca Inversa com Barra"] },
+      { name: "Prancha Abdominal Isométrica", sets: "3 séries • 45 - 60s", type: "Fortalecimento do Core", alts: ["Abdominal Infra no Solo", "Prancha Lateral (30s cada lado)"] },
+      { name: "Elevação de Panturrilha em Pé no Step", sets: "3 séries • 15 reps", type: "Isolado — Gastrocnêmio", alts: ["Panturrilha em Pé no Leg Press Horizontal", "Gêmeos em Pé no Smith"] }
     ]
   },
   sab: {
-    heroTitle: "CARDIO • Atividade Aeróbica",
-    heroSub: "Resistência & Regeneração • 2 exercícios",
-    focusTitle: "Foco: Condicionamento Físico",
-    focusDesc: "Sessão focada em gasto calórico e recuperação ativa.",
-    cardioTitle: "45 min Corrida / Caminhada",
-    cardioSub: "Ritmo moderado contínuo",
+    heroTitle: "LEGS • Fortalecimento para Corrida",
+    heroSub: "Tornozelos, Panturrilhas & Posterior • 6 exercícios",
+    focusTitle: "Foco: Prevenção de Lesões & Estabilidade",
+    focusDesc: "Fortalecimento do tendão de Aquiles, articulações e cadeia posterior.",
+    cardioTitle: "15-20 min Caminhada Leve / Esteira Plana",
+    cardioSub: "Recuperação ativa",
     exercises: [
-      { name: "Corrida Contínua / Caminhada Inclinada", sets: "1 sessão • 45 min", type: "Aeróbico", alts: ["Bicicleta ergométrica", "Elíptico"] },
-      { name: "Mobilidade e Mobilização Articular", sets: "3 séries • 10 min", type: "Flexibilidade", alts: ["Alongamento dinâmico", "Liberação miofascial"] }
+      { name: "Elevação de Panturrilha Unilateral no Step", sets: "4 séries • 12 - 15 /perna", type: "Isolado — Descida lenta (3s)", alts: ["Panturrilha Unilateral no Solo", "Panturrilha Sentado no Gêmeos"] },
+      { name: "Gêmeos em Pé no Degrau / Step com Carga", sets: "3 séries • 12 - 15", type: "Isolado — Alongamento e pausa no topo", alts: ["Panturrilha em Pé no Leg Press 45°", "Gêmeos em Pé na Máquina"] },
+      { name: "Stiff Unilateral com Halter (RDL)", sets: "3 séries • 10 - 12 /perna", type: "Composto — Estabilidade de tornozelo e glúteo", alts: ["Aviãozinho / RDL Unilateral sem Carga", "Stiff Unilateral no Smith"] },
+      { name: "Afundo Reverso no Step", sets: "3 séries • 10 /perna", type: "Composto — Proteção da patela", alts: ["Afundo Reverso no Solo sem Step", "Agachamento Búlgaro com Apoio"] },
+      { name: "Levantamento Terra Stiff", sets: "3 séries • 10 reps", type: "Composto — Cadeia posterior inteira", alts: ["Stiff com Barra Reta", "Good Morning com Carga Leve"] },
+      { name: "Mesa Flexora ou Cadeira Flexora", sets: "3 séries • 12 - 15", type: "Isolado — Posterior de coxa", alts: ["Flexão de Joelhos no Cabo com Tornozeleira", "Flexão de Coxa com Bola Suíça"] }
     ]
   },
   dom: {
-    heroTitle: "REST • Descanso Ativo",
-    heroSub: "Recuperação Total",
-    focusTitle: "Foco: Regeneração Muscular",
-    focusDesc: "Dia de descanso para recuperação muscular e do SNC.",
-    cardioTitle: "20 min Caminhada Leve",
-    cardioSub: "Opcional • Ritmo relaxado",
+    heroTitle: "REST • Descanso Total",
+    heroSub: "Recuperação & Regeneração",
+    focusTitle: "Foco: Controle do Cortisol & Descanso Articular",
+    focusDesc: "Dia de descanso para recuperação muscular e restauração do SNC.",
+    cardioTitle: "Caminhada leve opcional / Lazer",
+    cardioSub: "Sem impacto ou carga",
     exercises: [
-      { name: "Caminhada Leve ao Ar Livre", sets: "1 sessão • 20-30 min", type: "Recuperação Ativa", alts: ["Passeio de bicicleta", "Sem atividade"] },
-      { name: "Rotina de Alongamentos", sets: "1 sessão • 15 min", type: "Flexibilidade", alts: ["Yoga suave", "Mobilidade de quadril"] }
+      { name: "Caminhada Leve de Lazer", sets: "1 sessão • 20 - 30 min", type: "Recuperação Ativa", alts: ["Passeio ao ar livre", "Repouso completo"] },
+      { name: "Rotina de Alongamentos Suaves", sets: "1 sessão • 15 min", type: "Flexibilidade", alts: ["Mobilidade leve de quadril"] }
     ]
   }
 };
@@ -127,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function setupEvents() {
-  // Navegação
+  // Navegação Principal
   document.querySelector("nav")?.addEventListener("click", (e) => {
     const btn = e.target.closest(".nav-item");
     if (!btn) return;
@@ -232,7 +244,6 @@ function setupEvents() {
         time: timeStr
       });
 
-      // Resetar checkboxes apenas do dia concluído
       data.exercises.forEach((_, idx) => {
         delete st.completed[`${selectedDay}-${idx}`];
       });

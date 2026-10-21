@@ -1,9 +1,25 @@
-body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: #0D0B14;
+/* Importação da fonte Inter com pesos para destaque */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg-dark: #0D0B14;
+  --card-bg: #181524;
+  --card-border: #2D2640;
+  --primary-purple: #A855F7;
+  --text-main: #F9FAFB;
+  --text-muted: #9CA3AF;
 }
 
-/* Ocultar barra de rolagem */
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  /* Aumenta levemente a renderização base para facilitar a leitura */
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Ocultar barra de rolagem horizontal mantendo a navegação ativa */
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
@@ -12,18 +28,53 @@ body {
   scrollbar-width: none;
 }
 
+/* Tipografia Levemente Maior para Leitura Rápida */
+h1, .page-title {
+  font-size: 1.75rem !important; /* 28px */
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 1.35rem !important; /* ~22px */
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 1.15rem !important; /* ~18px */
+  font-weight: 700;
+}
+
+h4, .ex-title {
+  font-size: 1.05rem !important; /* ~17px */
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+p, .ex-meta {
+  font-size: 0.925rem !important; /* ~15px */
+  color: var(--text-muted);
+}
+
+/* Estados Ativos com Transição Suave */
 .nav-item.active {
-  color: #A855F7;
+  color: var(--primary-purple);
 }
 
 .week-tab.active, .cargas-tab.active {
-  background-color: rgba(88, 28, 135, 0.6);
-  border-color: #A855F7;
-  color: #ffffff;
+  background-color: rgba(168, 85, 247, 0.25) !important;
+  border-color: var(--primary-purple) !important;
+  color: #FFFFFF !important;
+  font-weight: 700;
 }
 
 .btn-time-select.active {
-  background-color: rgba(88, 28, 135, 0.6);
-  border-color: #A855F7;
-  color: #ffffff;
+  background-color: rgba(168, 85, 247, 0.25) !important;
+  border-color: var(--primary-purple) !important;
+  color: #FFFFFF !important;
+}
+
+/* Aumento do tamanho dos botões para toque confortável */
+button, label.cursor-pointer {
+  min-height: 44px;
 }
